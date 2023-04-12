@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kz.bitlab.techorda.db.Book;
+import kz.bitlab.techorda.db.DBConnection;
 import kz.bitlab.techorda.db.DBManager;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 
 @WebServlet(value = "/add-book")
 public class AddBookServlet extends HttpServlet {
@@ -31,7 +33,7 @@ public class AddBookServlet extends HttpServlet {
         book.setGenre(genre);
         book.setDescription(description);
 
-        DBManager.addBook(book);
+        DBConnection.addBook(book);
 
         response.sendRedirect("/");
 
