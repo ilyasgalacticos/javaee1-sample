@@ -22,10 +22,14 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String text = (String) session.getAttribute("userName");
 
-        System.out.println(text);
-
-        ArrayList<Book> books = DBConnection.getBooks();
-        request.setAttribute("knigi", books);
+        String key = request.getParameter("key");
+        if(key != null) {
+            ArrayList<Book> books = DBConnection.searchBooks("%"+key+"%");
+            request.setAttribute("knigi", books);
+        }else{
+            ArrayList<Book> books = DBConnection.getBooks();
+            request.setAttribute("knigi", books);
+        }
 
         ArrayList<Author> authors = DBConnection.getAuthors();
         request.setAttribute("avtory", authors);

@@ -446,4 +446,47 @@ public class DBConnection {
         }
         return comments;
     }
+
+    public static ArrayList<Book> searchBooks(String key) {
+
+        ArrayList<Book> books = new ArrayList<>();
+
+        try {
+
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT bo.id, bo.name, bo.genre, bo.description, bo.price, bo.author_id, au.first_name, au.last_name, au.instagram " +
+                            "FROM books AS bo " +
+                            "INNER JOIN authors AS au ON bo.author_id = au.id " +
+                            "WHERE LOWER(bo.name) LIKE LOWER(?) " +
+                            "ORDER BY bo.price DESC");
+
+            statement.setString(1, key);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                Book book = new Book();
+                book.setName(resultSet.getString("name"));
+                book.setId(resultSet.getInt("id"));
+                book.setDescription(resultSet.getString("description"));
+                book.setGenre(resultSet.getString("genre"));
+                book.setPrice(resultSet.getDouble("price"));
+
+                Author author = new Author();
+                author.setId(resultSet.getInt("author_id"));
+                author.setFirstName(resultSet.getString("first_name"));
+                author.setLastName(resultSet.getString("last_name"));
+                author.setInstagram(resultSet.getString("instagram"));
+
+                book.setAuthor(author);
+
+                books.add(book);
+            }
+            statement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return books;
+    }
 }
