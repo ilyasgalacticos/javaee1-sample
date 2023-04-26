@@ -1,3 +1,6 @@
+<%@ page import="kz.bitlab.techorda.db.User" %><%
+    User currentUser = (User) session.getAttribute("currentUser");
+%>
 <div class="container">
     <nav class="navbar navbar-expand-lg bg-success navbar-dark">
         <div class="container-fluid">
@@ -13,8 +16,49 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/add-book-page">Add Book</a>
+                        <a class="nav-link" href="/authors">Authors</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/news">All News</a>
+                    </li>
+                    <%
+                        if(currentUser!=null){
+                    %>
+                        <%
+                            if(currentUser.getRole()==1){
+                        %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/add-book-page">Add Book</a>
+                            </li>
+                        <%
+                            }
+                        %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/add-news-page">Add News</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%=currentUser.getFullName()%>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/">Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <%
+                        }else{
+                    %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Register</a>
+                        </li>
+                    <%
+                        }
+                    %>
                 </ul>
             </div>
         </div>

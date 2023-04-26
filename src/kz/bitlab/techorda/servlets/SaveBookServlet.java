@@ -5,10 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kz.bitlab.techorda.db.Book;
-import kz.bitlab.techorda.db.DBConnection;
-import kz.bitlab.techorda.db.DBManager;
-import kz.bitlab.techorda.db.DBUtil;
+import kz.bitlab.techorda.db.*;
 
 import java.io.IOException;
 
@@ -18,24 +15,32 @@ public class SaveBookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int id = Integer.parseInt(request.getParameter("book_id"));
-        String name = request.getParameter("book_name");
-        String author = request.getParameter("book_author");
-        double price = Double.parseDouble(request.getParameter("book_price"));
-        String genre = request.getParameter("book_genre");
-        String description = request.getParameter("book_description");
+        User user = (User) request.getSession().getAttribute("currentUser");
+        if(user!=null) {
 
-        Book book = DBConnection.getBook(id);
-        if(book!=null){
-            book.setName(name);
-            book.setAuthor(author);
-            book.setPrice(price);
-            book.setGenre(genre);
-            book.setDescription(description);
-            DBConnection.updateBook(book);
-            response.sendRedirect("/details?book_id="+id);
+            int id = Integer.parseInt(request.getParameter("book_id"));
+            String name = request.getParameter("book_name");
+            int authorId = Integer.parseInt(request.getParameter("book_author"));
+            double price = Double.parseDouble(request.getParameter("book_price"));
+            String genre = request.getParameter("book_genre");
+            String description = request.getParameter("book_description");
+
+            Book book = DBConnection.getBook(id);
+            Author author = DBConnection.getAuthor(authorId);
+
+            if (book != null && author != null) {
+                book.setName(name);
+                book.setPrice(price);
+                book.setGenre(genre);
+                book.setDescription(description);
+                book.setAuthor(author);
+                DBConnection.updateBook(book);
+                response.sendRedirect("/details?book_id=" + id);
+            } else {
+                response.sendRedirect("/");
+            }
         }else{
-            response.sendRedirect("/");
+            response.sendRedirect("/login");
         }
     }
 }

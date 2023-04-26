@@ -16,10 +16,12 @@
             </div>
             <div class="row mt-3">
                 <div class="col-12">
+                    <%
+                        if(currentUser!=null && currentUser.getRole()==1){
+                    %>
                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addBook">
                        + Add Book
                     </button>
-
                     <div class="modal fade" id="addBook" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -36,6 +38,9 @@
                             </div>
                         </div>
                     </div>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
             <div class="row mt-3">
@@ -60,7 +65,7 @@
                                 <tr>
                                     <td><%=book.getId()%></td>
                                     <td><%=book.getName()%></td>
-                                    <td><%=book.getAuthor()%></td>
+                                    <td><%=book.getAuthor().getFirstName() + " " + book.getAuthor().getLastName()%></td>
                                     <td><%=book.getGenre()%></td>
                                     <td><%=book.getPrice()%> KZT</td>
                                     <td>
